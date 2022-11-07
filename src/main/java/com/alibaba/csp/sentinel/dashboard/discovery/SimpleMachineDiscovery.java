@@ -77,11 +77,18 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
         if (isFirst) {
             logger.info("重新设置规则");
             sendRuleToMachine(machineInfo);
+            if (machine.isSendFail()) {
+                machine.setSendFail(false);
+            }
         }
         return 1;
     }
 
     private boolean isHealthy(MachineInfo machine, boolean isHealthy) {
+        if (machine.isSendFail()) {
+            return false;
+        }
+
         if (machine != null && (System.currentTimeMillis() - machine.getLastHeartbeat()) >= (1000 * 11)) {
             isHealthy = false;
         }
