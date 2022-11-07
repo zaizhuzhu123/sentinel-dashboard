@@ -28,6 +28,8 @@ import com.alibaba.csp.sentinel.dashboard.repository.rule.InDatabaseRuleReposito
 import com.alibaba.csp.sentinel.dashboard.repository.rule.InMemoryRuleRepositoryAdapter;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -44,9 +46,12 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
     @Resource
     ApplicationContext applicationContext;
 
+    private static Logger logger = LoggerFactory.getLogger(SimpleMachineDiscovery.class);
+
 
     @Override
     public long addMachine(MachineInfo machineInfo) {
+        logger.info("addMachine");
         AssertUtil.notNull(machineInfo, "machineInfo cannot be null");
         AppInfo appInfo = apps.get(machineInfo.getApp());
         boolean isFirst = false;
@@ -58,7 +63,12 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
             isFirst = true;
         }
         MachineInfo machine = appInfo.getMachine(machineInfo.getIp(), machineInfo.getPort()).orElse(null);
-        if (machine == null || !machine.isHealthy())//如果是从来没有注册过，或者是重连
+        //当掉线超过10秒 就重新设置规则
+        boolean isHealthy = true;
+        if (machine != null && (System.currentTimeMillis() - machine.getLastHeartbeat()) >= (1000 * 11)) {
+            isHealthy = false;
+        }
+        if (machine == null || !isHealthy)//如果是从来没有注册过，或者是重连
         {
             isFirst = true;
         }
@@ -67,6 +77,7 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
         appInfo.addMachine(machineInfo);
 
         if (isFirst) {
+            logger.info("重新设置规则");
             sendRuleToMachine(machineInfo);
         }
         return 1;
