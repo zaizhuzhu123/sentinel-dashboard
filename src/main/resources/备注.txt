@@ -1,0 +1,2 @@
+#docker 构建命令
+docker buildx build --platform linux/arm64,linux/amd64 -t zaizhuzhu123/sentinel-dashboard:1.0.0 . --push
