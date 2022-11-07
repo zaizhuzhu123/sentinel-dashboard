@@ -65,9 +65,7 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
         MachineInfo machine = appInfo.getMachine(machineInfo.getIp(), machineInfo.getPort()).orElse(null);
         //当掉线超过10秒 就重新设置规则
         boolean isHealthy = true;
-        if (machine != null && (System.currentTimeMillis() - machine.getLastHeartbeat()) >= (1000 * 11)) {
-            isHealthy = false;
-        }
+        isHealthy = isHealthy(machine, isHealthy);
         if (machine == null || !isHealthy)//如果是从来没有注册过，或者是重连
         {
             isFirst = true;
@@ -81,6 +79,16 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
             sendRuleToMachine(machineInfo);
         }
         return 1;
+    }
+
+    private boolean isHealthy(MachineInfo machine, boolean isHealthy) {
+        if (machine != null && (System.currentTimeMillis() - machine.getLastHeartbeat()) >= (1000 * 11)) {
+            isHealthy = false;
+        }
+        if (machine != null && (System.currentTimeMillis() - machine.getLastHeartbeat()) < (1000 * 10)) {
+            isHealthy = false;
+        }
+        return isHealthy;
     }
 
     //向机器发送配置
