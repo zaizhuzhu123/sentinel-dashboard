@@ -85,7 +85,7 @@ public class SimpleMachineDiscovery implements MachineDiscovery {
     }
 
     private boolean isHealthy(MachineInfo machine, boolean isHealthy) {
-        if (machine.isSendFail()) {
+        if (machine != null && machine.isSendFail()) {
             return false;
         }
 
