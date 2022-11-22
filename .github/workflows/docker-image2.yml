@@ -43,5 +43,6 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
+          platforms: linux/arm64, linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/sentinel-dashboard:latest
