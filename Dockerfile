@@ -1,7 +1,7 @@
 
 # Dockerfile
 # 基于的镜像
-FROM adoptopenjdk/openjdk8-openj9:jre8u-ubuntu-nightly
+FROM adoptopenjdk/openjdk8-openj9
 
 VOLUME /tmp
 ADD target/sentinel-dashboard.jar app.jar
