@@ -1,7 +1,7 @@
 
 # Dockerfile
 # 基于的镜像
-FROM openjdk:8-jdk-alpine
+FROM ibm-semeru-runtimes:open-8u362-b09-jdk
 
 VOLUME /tmp
 ADD sentinel-dashboard.jar app.jar
