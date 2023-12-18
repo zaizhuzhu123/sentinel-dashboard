@@ -12,7 +12,7 @@ ENV DB_ADDRESS 127.0.0.1:3306
 ENV DB_NAME sentinel-dashboard
 ENV DB_USER root
 ENV DB_PASSWORD root
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.datasource.address=${DB_ADDRESS}","--spring.datasource.name=${DB_NAME}","--spring.datasource.username=${DB_USER}","--spring.datasource.password=${DB_PASSWORD}"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.datasource.url=jdbc:mysql://${DB_ADDRESS}/${DB_NAME}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true","--spring.datasource.username=${DB_USER}","--spring.datasource.password=${DB_PASSWORD}"]
 
 # 对外端口a
 EXPOSE 8080
