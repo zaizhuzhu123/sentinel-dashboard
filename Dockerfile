@@ -4,7 +4,7 @@
 FROM ibm-semeru-runtimes:open-8u362-b09-jdk
 
 VOLUME /tmp
-ADD sentinel-dashboard.jar app.jar
+ADD target/sentinel-dashboard.jar app.jar
 
 # -Djava.security.egd=file:/dev/./urandom 可解决tomcat可能启动慢的问题
 # 具体可查看：https://www.cnblogs.com/mightyvincent/p/7685310.html
